@@ -21,6 +21,14 @@ namespace SchoolManagementApp.MVC.Controllers
         // GET: Courses
         public async Task<IActionResult> Index()
         {
+            /*
+            If (databaseTableExists){
+                var recordsInTable = await _context.Courses.ToListAsymc();
+                return View(recordsInTable)
+            }
+
+            return Problem("Entity set 'SchoolManagementDbContext.Courses'  is null.");
+            */
               return _context.Courses != null ? 
                           View(await _context.Courses.ToListAsync()) :
                           Problem("Entity set 'SchoolManagementDbContext.Courses'  is null.");
@@ -55,7 +63,7 @@ namespace SchoolManagementApp.MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Code,Credits")] Course course)
+        public async Task<IActionResult> Create([Bind("Name,Code,Credits")] Course course)
         {
             if (ModelState.IsValid)
             {
