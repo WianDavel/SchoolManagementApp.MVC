@@ -3,15 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SchoolManagementApp.MVC.Data;
 
-public class LecturerMetaData{
-    
-    [Display(Name ="First Name")]
-     public string FirstName { get; set; } = null!;
+public class LecturerMetadata
+{
+    [Display(Name="First Name")]
+    public string FirstName { get; set; } = null!;
 
-    [Display(Name ="Last Name")]
+    [Display(Name="Last Name")]
     public string LastName { get; set; } = null!;
 }
 
-
-[ModelMetadataType(typeof(LecturerMetaData))]
+[ModelMetadataType(typeof(LecturerMetadata))]
 public partial class Lecturer{}

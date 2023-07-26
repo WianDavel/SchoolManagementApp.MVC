@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SchoolManagementApp.MVC.Models;
 
 namespace SchoolManagementApp.MVC.Controllers;
+
 [AllowAnonymous]
 public class HomeController : Controller
 {
@@ -18,7 +19,7 @@ public class HomeController : Controller
     {
         return View();
     }
-    
+
     public IActionResult Privacy()
     {
         return View();
@@ -28,8 +29,6 @@ public class HomeController : Controller
     {
         return View();
     }
-
-
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

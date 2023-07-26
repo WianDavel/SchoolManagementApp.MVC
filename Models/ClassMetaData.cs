@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SchoolManagementApp.MVC.Data;
 
-public class ClassMetaData
+public class ClassMetadata
 {
     [Display(Name="Lecturer")]
     public int LecturerId { get; set; }
 
-    [Display(Name ="Course")]
+    [Display(Name="Course")]
     public int CourseId { get; set; }
 }
 
-[ModelMetadataType(typeof(ClassMetaData))]
+[ModelMetadataType(typeof(ClassMetadata))]
 public partial class Class{}

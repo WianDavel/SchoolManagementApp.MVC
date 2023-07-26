@@ -1,3 +1,4 @@
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,18 +12,21 @@ namespace SchoolManagementApp.MVC.Controllers
     public class ClassesController : Controller
     {
         private readonly SchoolManagementDbContext _context;
+        private readonly INotyfService _notyfService;
 
-        public ClassesController(SchoolManagementDbContext context)
+        public ClassesController(SchoolManagementDbContext context, INotyfService notyfService)
         {
             _context = context;
+            _notyfService = notyfService;
         }
 
         // GET: Classes
         public async Task<IActionResult> Index()
         {
             var schoolManagementDbContext = _context.Classes
-            .Include(q=> q.Course)
+            .Include(q => q.Course)
             .Include(q => q.Lecturer);
+
             return View(await schoolManagementDbContext.ToListAsync());
         }
 
@@ -95,7 +99,6 @@ namespace SchoolManagementApp.MVC.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("Id,LecturerId,CourseId,Time")] Class @class)
         {
             if (id != @class.Id)
-
             {
                 return NotFound();
             }
@@ -163,29 +166,35 @@ namespace SchoolManagementApp.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<ActionResult> ManageEnrollments(int id)
+        public async Task<ActionResult> ManageEnrollments(int classId)
         {
-             var @class = await _context.Classes
+            var @class = await _context.Classes
                 .Include(q => q.Course)
                 .Include(q => q.Lecturer)
                 .Include(q => q.Enrollments)
                     .ThenInclude(q => q.Student)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
+                .FirstOrDefaultAsync(m => m.Id == classId);
+            
             var students = await _context.Students.ToListAsync();
 
             var model = new ClassEnrollmentViewModel();
-            model.Class = @class;
+            model.Class = new ClassViewModel
+            {
+                Id = @class.Id,
+                CourseName = $"{@class.Course.Code} - {@class.Course.Name}",
+                LecturerName = $"{@class.Lecturer.FirstName} {@class.Lecturer.LastName}",
+                Time = @class.Time.ToString()
+            };
 
             foreach (var stu in students)
             {
                 model.Students.Add(new StudentEnrollmentViewModel
                 {
                     Id = stu.Id,
-                    FirstName =stu.FirstName,
+                    FirstName = stu.FirstName,
                     LastName = stu.LastName,
                     IsEnrolled = (@class?.Enrollments?.Any(q => q.StudentId == stu.Id))
-                    .GetValueOrDefault()
+                        .GetValueOrDefault()
                 });
             }
 
@@ -194,28 +203,29 @@ namespace SchoolManagementApp.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EnrollStudent(int ClassId, int studentId, bool shouldEnroll)
+        public async Task<ActionResult> EnrollStudent(int classId, int studentId, bool shouldEnroll)
         {
             var enrollment = new Enrollment();
             if(shouldEnroll == true)
             {
-                enrollment.ClassId = ClassId;
+                enrollment.ClassId = classId;
                 enrollment.StudentId = studentId;
                 await _context.AddAsync(enrollment);
+                _notyfService.Success($"Student Enrolled Successfully");
             }
             else
             {
                 enrollment = await _context.Enrollments.FirstOrDefaultAsync(
-                    q => q.ClassId == ClassId && q.StudentId == studentId);
+                    q => q.ClassId == classId && q.StudentId == studentId);
 
-                    if(enrollment !=null)
-                    {
-                        _context.Remove(enrollment);
-                    }
+                if(enrollment != null){
+                    _context.Remove(enrollment);
+                    _notyfService.Warning($"Student Unenrolled Successfully");
+                }    
             }
-
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ManageEnrollments), 
+            new { classId = classId});
         }
 
         private bool ClassExists(int id)
@@ -225,19 +235,19 @@ namespace SchoolManagementApp.MVC.Controllers
 
         private void CreateSelectLists()
         {
-            var courses = _context.Courses.Select(q => new
+            var courses = _context.Courses.Select(q => new 
             {
-                FullCourse = $"{q.Code}-{q.Name} ({q.Credits} Credits)",
+                CourseName = $"{q.Code} - {q.Name} ({q.Credits} Credits)",
                 q.Id
             });
-            ViewData["CourseId"] = new SelectList(courses, "Id", "FullCourse");
-
-            var lecturers = _context.Lecturers.Select(q => new
+            
+            ViewData["CourseId"] = new SelectList(courses, "Id", "CourseName");
+            var lecturers = _context.Lecturers.Select(q => new 
             {
-                FullName = $"{q.FirstName} {q.LastName}",
+                Fullname = $"{q.FirstName} {q.LastName}",
                 q.Id
             });
-            ViewData["LecturerId"] = new SelectList(lecturers, "Id", "FullName");
+            ViewData["LecturerId"] = new SelectList(lecturers, "Id", "Fullname");
         }
     }
 }

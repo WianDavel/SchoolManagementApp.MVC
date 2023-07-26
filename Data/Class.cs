@@ -15,7 +15,7 @@ public partial class Class
 
     public virtual Course? Course { get; set; }
 
-    public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
+    public virtual ICollection<Enrollment> Enrollments { get; } = new List<Enrollment>();
 
     public virtual Lecturer? Lecturer { get; set; }
 }

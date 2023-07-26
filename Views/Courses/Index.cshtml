@@ -7,7 +7,7 @@
 <h1>Courses</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-success">+ Create New</a>
+    <a asp-action="Create" class="btn btn-success">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -47,13 +47,14 @@
 </table>
 
 <form asp-action="Delete" id="courseDeleteForm">
-        <input type="hidden" id="courseid" name="Id" />
-    </form>
+    <input type="hidden" id="courseid" name="Id"/>
+</form>
 
 @section Scripts{
     <script>
         $(function(){
             $('.table').DataTable();
+            
             $('.deleteBtn').click(function(e){
                 Swal.fire({
                     title: 'Are you sure?',
@@ -64,17 +65,17 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Yes, delete it!'
                     }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                        )
-                        var btn = $(this);
-                        var id = btn.data("id");
-                        $('#courseid').val(id);
-                        $('#courseDeleteForm').submit();
-                    }
+                        if (result.isConfirmed) {
+                            Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                            );
+                            var btn = $(this);
+                            var id = btn.data("id");
+                            $('#courseid').val(id);
+                            $('#courseDeleteForm').submit();
+                        }
                     })
             })
         })

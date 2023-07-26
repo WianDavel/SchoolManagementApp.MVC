@@ -7,12 +7,12 @@
 <h1>Lecturers</h1>
 
 <p>
-    <a class="btn btn-success" asp-action="Create">+ Create New</a>
+    <a asp-action="Create" class="btn btn-success">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th> 
                 @Html.DisplayNameFor(model => model.FirstName)
             </th>
             <th>
@@ -41,13 +41,14 @@
 </table>
 
 <form asp-action="Delete" id="lecturerDeleteForm">
-        <input type="hidden" id="lecturerid" name="Id" />
-    </form>
+    <input type="hidden" id="lecturerid" name="Id"/>
+</form>
 
 @section Scripts{
     <script>
         $(function(){
             $('.table').DataTable();
+
             $('.deleteBtn').click(function(e){
                 Swal.fire({
                     title: 'Are you sure?',
@@ -58,17 +59,17 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Yes, delete it!'
                     }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                        )
-                        var btn = $(this);
-                        var id = btn.data("id");
-                        $('#lecturerid').val(id);
-                        $('#lecturerDeleteForm').submit();
-                    }
+                        if (result.isConfirmed) {
+                            Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                            );
+                            var btn = $(this);
+                            var id = btn.data("id");
+                            $('#lecturerid').val(id);
+                            $('#lecturerDeleteForm').submit();
+                        }
                     })
             })
         })

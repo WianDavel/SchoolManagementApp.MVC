@@ -10,7 +10,7 @@ using SchoolManagementApp.MVC.Data;
 
 namespace SchoolManagementApp.MVC.Controllers
 {
-    [Authorize]
+     [Authorize]
     public class CoursesController : Controller
     {
         private readonly SchoolManagementDbContext _context;
@@ -23,14 +23,14 @@ namespace SchoolManagementApp.MVC.Controllers
         // GET: Courses
         public async Task<IActionResult> Index()
         {
-            /*
-            If (databaseTableExists){
-                var recordsInTable = await _context.Courses.ToListAsymc();
-                return View(recordsInTable)
-            }
+              /* 
+                If (databaseTableExists) {
+                    var recordsInTable = await _context.Courses.ToListAsync();
+                    return View(recordsInTable);
+                }
 
-            return Problem("Entity set 'SchoolManagementDbContext.Courses'  is null.");
-            */
+                return Problem("Entity set 'SchoolManagementDbContext.Courses'  is null.");
+              */
               return _context.Courses != null ? 
                           View(await _context.Courses.ToListAsync()) :
                           Problem("Entity set 'SchoolManagementDbContext.Courses'  is null.");

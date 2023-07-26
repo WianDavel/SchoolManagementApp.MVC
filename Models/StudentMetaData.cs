@@ -3,18 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SchoolManagementApp.MVC.Data;
 
-public class StudentMetaData
+public class StudentMetadata
 {
-    [Display(Name ="First Name")]
+    [Display(Name="First Name")]
     public string FirstName { get; set; } = null!;
 
-    [Display(Name ="Last Name")]
+    [Display(Name="Last Name")]
     public string LastName { get; set; } = null!;
 
-    [Display(Name ="Date of Birth")]
+    [Display(Name="Date Of Birth")]
     public DateTime? DateOfBirth { get; set; }
 }
 
-
-[ModelMetadataType(typeof(StudentMetaData))]
+[ModelMetadataType(typeof(StudentMetadata))]
 public partial class Student{}

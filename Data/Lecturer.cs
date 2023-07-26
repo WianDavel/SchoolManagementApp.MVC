@@ -11,5 +11,5 @@ public partial class Lecturer
 
     public string LastName { get; set; } = null!;
 
-    public virtual ICollection<Class> Classes { get; set; } = new List<Class>();
+    public virtual ICollection<Class> Classes { get; } = new List<Class>();
 }
